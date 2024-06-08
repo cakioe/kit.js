@@ -2,7 +2,7 @@
   "name": "@cakioe/kit.js",
   "module": "webview-src/index.mjs",
   "main": "webview-src/index.mjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "license": "MIT",
   "authors": [
@@ -37,5 +37,8 @@
     "webview-dist",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
