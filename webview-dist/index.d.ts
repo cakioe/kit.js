@@ -4,7 +4,7 @@
  * @param {string} value - The input string to convert.
  * @returns {string} The converted string in constant case.
  */
-type toConstantCase = (value: string) => string
+declare var toConstantCase = (value: string) => string
 
 /**
  * @method genSignature
@@ -13,7 +13,7 @@ type toConstantCase = (value: string) => string
  * @param {string} signKey - 签名密钥
  * @returns {string} 生成签名后的md5字符串
  */
-type genSignature = (args: Record<string, any>, signKey: string) => string
+declare var genSignature = (args: Record<string, any>, signKey: string) => string
 
 /**
  * @method toBase64String
@@ -22,7 +22,7 @@ type genSignature = (args: Record<string, any>, signKey: string) => string
  * @param {string} signKey - 签名密钥
  * @returns {string} 对象生成的base64编码字符串
  */
-type toBase64String = (args: Record<string, any>, signKey: string) => string
+declare var toBase64String = (args: Record<string, any>, signKey: string) => string
 
 /**
  * @method decryptBase64String
@@ -30,7 +30,7 @@ type toBase64String = (args: Record<string, any>, signKey: string) => string
  * @param {string} value - 需要解密的base64编码字符串
  * @returns Record<string, any> - 解密后的对象
  */
-type decryptBase64String = (value: string) => Record<string, any>
+declare var decryptBase64String = (value: string) => Record<string, any>
 
 /**
  * @method checkSignature
@@ -40,10 +40,6 @@ type decryptBase64String = (value: string) => Record<string, any>
  * @param {string} signKey - 签名密钥
  * @returns boolean
  */
-type checkSignature = (args: Record<string, any>, sign: string, signKey: string) => boolean
+declare var checkSignature = (args: Record<string, any>, sign: string, signKey: string) => boolean
 
-declare module '@cakioe/kit.js' {
-  export type { toConstantCase, genSignature, toBase64String, decryptBase64String, checkSignature }
-}
-
-export type { checkSignature, decryptBase64String, genSignature, toBase64String, toConstantCase };
+export { checkSignature, decryptBase64String, genSignature, toBase64String, toConstantCase };
