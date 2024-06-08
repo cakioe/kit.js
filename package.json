@@ -1,8 +1,8 @@
 {
   "name": "@cakioe/kit.js",
-  "module": "webview-src/index.mjs",
-  "main": "webview-src/index.mjs",
-  "version": "1.0.2",
+  "module": "webview-dist/index.mjs",
+  "main": "webview-dist/index.mjs",
+  "version": "1.0.4",
   "type": "module",
   "license": "MIT",
   "authors": [
