@@ -97,3 +97,24 @@ export const decryptBase64String = (value: string): Record<string, any> => {
 export const checkSignature = (args: Record<string, any>, sign: string, signKey: string): boolean => {
   return genSignature(args, signKey) === sign
 }
+
+/**
+ * @description [禁用debugger](https://juejin.cn/post/7000784414858805256)
+ * @method disableDebugger
+ */
+export const disableDebugger = () => {
+  function block() {
+    setInterval(() => {
+      ;(function() {
+        return false
+      })
+        ['constructor']('debugger')
+        ['call']()
+    }, 50)
+  }
+
+  try {
+    block()
+  } catch (err) {
+  }
+}

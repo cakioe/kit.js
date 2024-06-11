@@ -4,7 +4,7 @@
  * @param {string} value - The input string to convert.
  * @returns {string} The converted string in constant case.
  */
-declare var toConstantCase = (value: string) => string
+declare function toConstantCase(value: string): string
 
 /**
  * @method genSignature
@@ -13,7 +13,7 @@ declare var toConstantCase = (value: string) => string
  * @param {string} signKey - 签名密钥
  * @returns {string} 生成签名后的md5字符串
  */
-declare var genSignature = (args: Record<string, any>, signKey: string) => string
+declare function genSignature(args: Record<string, any>, signKey: string): string
 
 /**
  * @method toBase64String
@@ -22,7 +22,7 @@ declare var genSignature = (args: Record<string, any>, signKey: string) => strin
  * @param {string} signKey - 签名密钥
  * @returns {string} 对象生成的base64编码字符串
  */
-declare var toBase64String = (args: Record<string, any>, signKey: string) => string
+declare function toBase64String(args: Record<string, any>, signKey: string): string
 
 /**
  * @method decryptBase64String
@@ -30,7 +30,7 @@ declare var toBase64String = (args: Record<string, any>, signKey: string) => str
  * @param {string} value - 需要解密的base64编码字符串
  * @returns Record<string, any> - 解密后的对象
  */
-declare var decryptBase64String = (value: string) => Record<string, any>
+declare function decryptBase64String(value: string): Record<string, any>
 
 /**
  * @method checkSignature
@@ -40,6 +40,12 @@ declare var decryptBase64String = (value: string) => Record<string, any>
  * @param {string} signKey - 签名密钥
  * @returns boolean
  */
-declare var checkSignature = (args: Record<string, any>, sign: string, signKey: string) => boolean
+declare function checkSignature(args: Record<string, any>, sign: string, signKey: string): boolean
 
-export { checkSignature, decryptBase64String, genSignature, toBase64String, toConstantCase };
+/**
+ * @method disableDebugger
+ * @description: 禁用调试
+ */
+declare function disableDebugger(): void
+
+export { checkSignature, decryptBase64String, disableDebugger, genSignature, toBase64String, toConstantCase };
