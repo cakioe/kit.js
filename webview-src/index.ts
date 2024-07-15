@@ -16,7 +16,7 @@ export const toConstantCase = (value: string): string => {
  * @param args
  * @param signKey
  */
-export const genSignature = (args: Record<string, any>, prefix: string, signKey: string): string => {
+export const genSignature = (args: Record<string, any>, signKey: string, prefix = ''): string => {
   let result = []
 
   // 删除签名 `sign`
@@ -35,12 +35,12 @@ export const genSignature = (args: Record<string, any>, prefix: string, signKey:
     }
 
     if (typeof v === 'object' && !Array.isArray(v)) {
-      result.push(genSignature(v, k, signKey))
+      result.push(genSignature(v, signKey, k))
     } else if (Array.isArray(v)) {
       v.forEach((item: any, index: number) => {
         const arrKey = `${k}[${index}]`
         if (item !== null && typeof item === 'object') {
-          result.push(genSignature(item, arrKey, signKey))
+          result.push(genSignature(item, signKey, arrKey))
         } else {
           result.push(`${encodeURIComponent(arrKey)}=${encodeURIComponent(item)}`)
         }
@@ -82,7 +82,7 @@ export const toBase64String = (args: Record<string, any>, signKey: string): stri
   if (!('sign' in args)) {
     args = {
       ...args,
-      sign: genSignature(args, '', signKey)
+      sign: genSignature(args, signKey, '')
     }
   }
 
@@ -112,7 +112,7 @@ export const decryptBase64String = (value: string): Record<string, any> => {
  * @param signKey
  */
 export const checkSignature = (args: Record<string, any>, sign: string, signKey: string): boolean => {
-  return genSignature(args, '', signKey) === sign
+  return genSignature(args, signKey, '') === sign
 }
 
 /**

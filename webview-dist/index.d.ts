@@ -11,9 +11,10 @@ declare function toConstantCase(value: string): string
  * @description: 生成签名
  * @param {Record<string, any>} args - 传入的对象
  * @param {string} signKey - 签名密钥
+ * @param {string} prefix - 对象或数组key
  * @returns {string} 生成签名后的md5字符串
  */
-declare function genSignature(args: Record<string, any>, signKey: string): string
+declare function genSignature(args: Record<string, any>, signKey: string, prefix: string): string
 
 /**
  * @method toBase64String
