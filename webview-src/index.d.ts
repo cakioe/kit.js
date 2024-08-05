@@ -14,7 +14,7 @@ export declare function toConstantCase(value: string): string
  * @param {string} prefix - 对象或数组key
  * @returns {string} 生成签名后的md5字符串
  */
-export declare function genSignature(args: Record<string, any>, signKey: string, prefix: string): string
+export declare function genSignature(args: Record<string, any>, signKey: string): string
 
 /**
  * @method toBase64String

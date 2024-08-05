@@ -16,51 +16,43 @@ export const toConstantCase = (value: string): string => {
  * @param args
  * @param signKey
  */
-export const genSignature = (args: Record<string, any>, signKey: string, prefix = ''): string => {
-  let result = []
+export const genSignature = (args: Record<string, any>, signKey: string): string => {
+  let result: Record<string, any> = []
 
   // 删除签名 `sign`
   if ('sign' in args) {
     delete args['sign']
   }
 
-  // 字典序排序
-  const keys = Object.keys(args).sort()
-  for (let i = 0; i < keys.length; i++) {
-    const p = keys[i]
-    const k = prefix ? `${prefix}[${p}]` : p
-    const v = args[keys[i]]
-    if (v === '' || v === undefined || v === null) {
-      continue
-    }
-
-    if (typeof v === 'object' && !Array.isArray(v)) {
-      result.push(genSignature(v, signKey, k))
-    } else if (Array.isArray(v)) {
-      v.forEach((item: any, index: number) => {
-        const arrKey = `${k}[${index}]`
-        if (item !== null && typeof item === 'object') {
-          result.push(genSignature(item, signKey, arrKey))
-        } else {
-          result.push(`${encodeURIComponent(arrKey)}=${encodeURIComponent(item)}`)
-        }
-      })
+  const addValues = (prefix: string, obj: any) => {
+    if (typeof obj === 'object' && obj !== null) {
+      if (Array.isArray(obj)) {
+        obj.forEach((val, index) => {
+          addValues(`${prefix}[${index}]`, val)
+        })
+      } else {
+        Object.keys(obj).forEach((key) => {
+          addValues(`${prefix}[${key}]`, obj[key])
+        })
+      }
     } else {
-      result.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+      if (obj !== '' && obj !== 'NULL') {
+        result.push(`${prefix}=${encodeURI(obj)}`)
+      }
     }
   }
 
-  let payload: Record<string, any> = {}
-  for (const key of keys) {
-    payload[key] = args[key]
-  }
+  Object.keys(args).forEach((key) => {
+    addValues(key, args[key])
+  })
 
-  // 拼接
-  const hash = result.join('&')
-  const signStr = `${hash}&key=${signKey}`
+  result.sort() // 按键的字典序排序
+
+  let payload = encodeURI(result.join('&'))
+  payload = `${payload}&key=${signKey}`
 
   // md5大写
-  return CryptoJS.MD5(signStr).toString(CryptoJS.enc.Hex).toUpperCase()
+  return CryptoJS.MD5(payload).toString(CryptoJS.enc.Hex).toUpperCase()
 }
 
 /**
@@ -82,7 +74,7 @@ export const toBase64String = (args: Record<string, any>, signKey: string): stri
   if (!('sign' in args)) {
     args = {
       ...args,
-      sign: genSignature(args, signKey, '')
+      sign: genSignature(args, signKey)
     }
   }
 
@@ -112,7 +104,7 @@ export const decryptBase64String = (value: string): Record<string, any> => {
  * @param signKey
  */
 export const checkSignature = (args: Record<string, any>, sign: string, signKey: string): boolean => {
-  return genSignature(args, signKey, '') === sign
+  return genSignature(args, signKey) === sign
 }
 
 /**
@@ -122,7 +114,7 @@ export const checkSignature = (args: Record<string, any>, sign: string, signKey:
 export const disableDebugger = () => {
   function block() {
     setInterval(() => {
-      ;(function () {
+      ;(function() {
         return false
       })
         ['constructor']('debugger')
@@ -132,5 +124,6 @@ export const disableDebugger = () => {
 
   try {
     block()
-  } catch (err) {}
+  } catch (err) {
+  }
 }
