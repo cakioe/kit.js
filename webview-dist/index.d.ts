@@ -1,52 +1,65 @@
 /**
- * @method toConstantCase
- * @description: Convert strings to constant case (UPPER_SNAKE_CASE).
- * @param {string} value - The input string to convert.
- * @returns {string} The converted string in constant case.
+ * @example
+ * ```typescript
+ * import { toConstantCase } from '@cakioe/kit.js';
+ * const value = toConstantCase('can.i.reset.merchant_config.app_secret');
+ * console.log(value); // CAN_I_RESET_MERCHANT_CONFIG_APP_SECRET
+ * ```
+ *
+ * @since 1.0.0
  */
-declare function toConstantCase(value: string): string
-
+export declare const toConstantCase: (value: string) => string;
 /**
- * @method genSignature
- * @description: 生成签名
- * @param {Record<string, any>} args - 传入的对象
- * @param {string} signKey - 签名密钥
- * @param {string} prefix - 对象或数组key
- * @returns {string} 生成签名后的md5字符串
+ * @example
+ * ```typescript
+ * import { genSignature } from '@cakioe/kit.js';
+ * const value = genSignature(records, 'key');
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
-declare function genSignature(args: Record<string, any>, signKey: string): string
-
+export declare const genSignature: (args: Record<string, any>, signKey: string) => string;
 /**
- * @method toBase64String
- * @description: 对象转base64
- * @param {Record<string, any>} args - 传入的对象
- * @param {string} signKey - 签名密钥
- * @returns {string} 对象生成的base64编码字符串
+ * @example
+ * ```typescript
+ * import { toBase64String } from '@cakioe/kit.js';
+ * const value = toBase64String(records, 'key');
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
-declare function toBase64String(args: Record<string, any>, signKey: string): string
-
+export declare const toBase64String: (args: Record<string, any>, signKey: string) => string;
 /**
- * @method decryptBase64String
- * @description: base64解密
- * @param {string} value - 需要解密的base64编码字符串
- * @returns Record<string, any> - 解密后的对象
+ * @example
+ * ```typescript
+ * import { decryptBase64String } from '@cakioe/kit.js';
+ * const value = decryptBase64String(record);
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
-declare function decryptBase64String(value: string): Record<string, any>
-
+export declare const decryptBase64String: (value: string) => Record<string, any>;
 /**
- * @method checkSignature
- * @description: 校验签名
- * @param {Record<string, any>} args - 传入的对象
- * @param {string} sign - 签名
- * @param {string} signKey - 签名密钥
- * @returns boolean
+ * @example
+ * ```typescript
+ * import { checkSignature } from '@cakioe/kit.js';
+ * const value = checkSignature(records, sign, signKey);
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
-declare function checkSignature(args: Record<string, any>, sign: string, signKey: string): boolean
-
+export declare const checkSignature: (args: Record<string, any>, sign: string, signKey: string) => boolean;
 /**
- * @method disableDebugger
- * @description: 禁用调试
+ * @example<https://juejin.cn/post/7000784414858805256>
+ * ```typescript
+ * import { disableDebugger } from '@cakioe/kit.js';
+ * disableDebugger();
+ * ```
+ *
+ * @since 1.0.0
  */
-declare function disableDebugger(): void
-
-export { checkSignature, decryptBase64String, disableDebugger, genSignature, toBase64String, toConstantCase };
+export declare const disableDebugger: () => void;

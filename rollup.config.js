@@ -1,29 +1,44 @@
+import { readFileSync } from 'fs'
+import { cwd } from 'process'
+import { join } from 'path'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import terser from '@rollup/plugin-terser'
-import { dts } from 'rollup-plugin-dts'
 
-const config = [{
-  input: 'webview-src/index.ts',
-  plugins: [
-    typescript({
-      include: ['webview-src/**/*.ts', 'webview-src/**/*.tsx'],
-      tsconfig: 'tsconfig.json'
-    }),
-    terser()
-  ],
-  output: [{
-    file: 'webview-dist/index.mjs',
-    format: 'es',
-    sourcemap: true
-  }, {
-    file: 'webview-dist/index.cjs',
-    format: 'cjs',
-    sourcemap: true
-  }]
-}, {
-  input: './webview-src/index.d.ts',
-  output: [{ file: 'webview-dist/index.d.ts', format: 'es' }],
-  plugins: [dts()]
-}]
+const createConfig = (options = {}) => {
+  const { input = 'webview-src/index.ts', external = [], additionalConfigs = [] } = options
 
-export default config
+  const pkg = JSON.parse(readFileSync(join(cwd(), 'package.json'), 'utf8'))
+
+  return [
+    {
+      input,
+      output: [
+        {
+          file: pkg.exports.import,
+          format: 'esm'
+        },
+        {
+          file: pkg.exports.require,
+          format: 'cjs'
+        }
+      ],
+      plugins: [
+        typescript({
+          declaration: true,
+          declarationDir: `./${pkg.exports.import.split('/')[0]}`
+        }),
+        terser(),
+        nodeResolve()
+      ],
+      external: [...external, ...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
+      onwarn: warning => {
+        throw Object.assign(new Error(), warning)
+      }
+    },
+
+    ...(Array.isArray(additionalConfigs) ? additionalConfigs : [additionalConfigs])
+  ]
+}
+
+export default createConfig

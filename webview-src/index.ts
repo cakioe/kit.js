@@ -1,25 +1,34 @@
 import CryptoJS from 'crypto-js'
 
 /**
- * @method toConstantCase
- * @description: 切换为常量命名
- * @example: `can.i.reset.merchant_config.app_secret` => `CAN_I_RESET_MERCHANT_CONFIG_APP_SECRET`
- * @param value
+ * @example
+ * ```typescript
+ * import { toConstantCase } from '@cakioe/kit.js';
+ * const value = toConstantCase('can.i.reset.merchant_config.app_secret');
+ * console.log(value); // CAN_I_RESET_MERCHANT_CONFIG_APP_SECRET
+ * ```
+ *
+ * @since 1.0.0
  */
 export const toConstantCase = (value: string): string => {
   return value.toUpperCase().replace(/[^A-Z0-9]/g, '_')
 }
 
+
 /**
- * @method genSignature
- * @description: 生成签名
- * @param args
- * @param signKey
+ * @example
+ * ```typescript
+ * import { genSignature } from '@cakioe/kit.js';
+ * const value = genSignature(records, 'key');
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
 export const genSignature = (args: Record<string, any>, signKey: string): string => {
   let result: Record<string, any> = []
 
-  // 删除签名 `sign`
+  // delete `sign` of fields when exists
   if ('sign' in args) {
     delete args['sign']
   }
@@ -31,7 +40,7 @@ export const genSignature = (args: Record<string, any>, signKey: string): string
           addValues(`${prefix}[${index}]`, val)
         })
       } else {
-        Object.keys(obj).forEach((key) => {
+        Object.keys(obj).forEach(key => {
           addValues(`${prefix}[${key}]`, obj[key])
         })
       }
@@ -42,27 +51,33 @@ export const genSignature = (args: Record<string, any>, signKey: string): string
     }
   }
 
-  Object.keys(args).forEach((key) => {
+  Object.keys(args).forEach(key => {
     addValues(key, args[key])
   })
 
-  result.sort() // 按键的字典序排序
+  // sort the result
+  result.sort()
 
   let payload = encodeURI(result.join('&'))
   payload = `${payload}&key=${signKey}`
 
-  // md5大写
+  // uppercase the md5 hash
   return CryptoJS.MD5(payload).toString(CryptoJS.enc.Hex).toUpperCase()
 }
 
+
 /**
- * @method toBase64String
- * @description: 对象转base64
- * @param args
- * @param signKey
+ * @example
+ * ```typescript
+ * import { toBase64String } from '@cakioe/kit.js';
+ * const value = toBase64String(records, 'key');
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
 export const toBase64String = (args: Record<string, any>, signKey: string): string => {
-  // 增加字段
+  // add timestamp in args when not exist
   if (!('timestamp' in args)) {
     args = {
       ...args,
@@ -70,7 +85,7 @@ export const toBase64String = (args: Record<string, any>, signKey: string): stri
     }
   }
 
-  // 判断是否存在sign
+  // check `sign` of fields exist or not
   if (!('sign' in args)) {
     args = {
       ...args,
@@ -84,10 +99,16 @@ export const toBase64String = (args: Record<string, any>, signKey: string): stri
   return CryptoJS.enc.Base64.stringify(bytes)
 }
 
+
 /**
- * @method decryptBase64String
- * @description: base64解密
- * @param value
+ * @example
+ * ```typescript
+ * import { decryptBase64String } from '@cakioe/kit.js';
+ * const value = decryptBase64String(record);
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
 export const decryptBase64String = (value: string): Record<string, any> => {
   const bytes = CryptoJS.enc.Base64.parse(value)
@@ -96,25 +117,35 @@ export const decryptBase64String = (value: string): Record<string, any> => {
   return JSON.parse(body)
 }
 
+
 /**
- * @method checkSignature
- * @description: 校验签名
- * @param args
- * @param sign
- * @param signKey
+ * @example
+ * ```typescript
+ * import { checkSignature } from '@cakioe/kit.js';
+ * const value = checkSignature(records, sign, signKey);
+ * console.log(value);
+ * ```
+ *
+ * @since 1.0.0
  */
 export const checkSignature = (args: Record<string, any>, sign: string, signKey: string): boolean => {
   return genSignature(args, signKey) === sign
 }
 
+
 /**
- * @description [禁用debugger](https://juejin.cn/post/7000784414858805256)
- * @method disableDebugger
+ * @example<https://juejin.cn/post/7000784414858805256>
+ * ```typescript
+ * import { disableDebugger } from '@cakioe/kit.js';
+ * disableDebugger();
+ * ```
+ *
+ * @since 1.0.0
  */
 export const disableDebugger = () => {
   function block() {
     setInterval(() => {
-      ;(function() {
+      ;(function () {
         return false
       })
         ['constructor']('debugger')
@@ -124,6 +155,5 @@ export const disableDebugger = () => {
 
   try {
     block()
-  } catch (err) {
-  }
+  } catch (err) {}
 }
