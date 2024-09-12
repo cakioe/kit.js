@@ -1,17 +1,29 @@
-# @cakioe/kit.js
-
-Convert strings to constant case (UPPER_SNAKE_CASE).
-
 ## Installation
 
 ```sh
 $ bun add @cakioe/kit.js --save
 ```
 
-## Usage
 ```typescript
-import { toConstantCase } from '@cakioe/kit.js'
+import Signatory from '@cakioe/kit.js';
 
-const name = toConstantCase('can.i.reset.merchant_config.app_secret')
-console.log(name) // CAN_I_RESET_MERCHANT_CONFIG_APP_SECRET
+const singer = new Signatory('key');
+const value = singer.genSignature(record);
+
+console.log(value);
 ```
+
+### genSignature / 生成签名
+According to the incoming map, the null value is filtered out and the signature is performed
+
+根据传入的map，过滤掉空值后进行签名
+
+### toBase64String / 将数据转成base64
+Append the map to the sign signature field and convert it to a base64 string
+
+将map追加sign签名字段，并转为base64字符串
+
+### checkSignature / 校验签名
+Verify the signature of the incoming map and the signature
+
+校验签名
