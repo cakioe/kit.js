@@ -125,3 +125,5 @@ bun.lockb
 test
 webview-dist
 package-lock.json
+dist
+build

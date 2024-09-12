@@ -6,16 +6,19 @@ on:
       - 'v*'
 
 permissions:
-  id-token: write
-  contents: read
+  contents: write
+  checks: write
+
+  actions: read
+  issues: read
+  packages: write
+  pull-requests: read
+  repository-projects: read
+  statuses: read
 
 jobs:
   ci:
     runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
-      packages: write
-
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -24,6 +27,12 @@ jobs:
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
+
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          strip_v: false
 
       - name: Setup node env 🏗
         uses: actions/setup-node@v3
@@ -51,6 +60,37 @@ jobs:
 
       - name: Build
         run: bun run build
+
+      - name: Create tar.gz file
+        run: tar -czvf "Release-${{steps.tag.outputs.tag}}".tar.gz webview-dist/*
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "Release-${{steps.tag.outputs.tag}}"
+          path: "Release-${{steps.tag.outputs.tag}}.tar.gz"
+          overwrite: true
+          retention-days: 1
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            This is the release for version ${{ github.ref }}.
+          draft: false
+          prerelease: false
+
+      - name: Upload tar release
+        uses: alexellis/upload-assets@0.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          asset_paths: '["Release-*.tar.gz"]'
 
       - name: Publish to npm
         run: npm publish --access public
