@@ -127,3 +127,5 @@ webview-dist
 package-lock.json
 dist
 build
+
+pnpm-lock.yaml

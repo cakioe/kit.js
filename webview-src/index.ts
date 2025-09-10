@@ -9,6 +9,7 @@ import CryptoJS from 'crypto-js'
  * ```
  *
  * @since 1.0.0
+ * @deprecated 1.8.0
  */
 export const toConstantCase = (value: string): string => {
   return value.toUpperCase().replace(/[^A-Z0-9]/g, '_')
@@ -22,6 +23,7 @@ export const toConstantCase = (value: string): string => {
  * ```
  *
  * @since 1.0.0
+ * @deprecated 1.8.0
  */
 export const disableDebugger = () => {
   function block() {
